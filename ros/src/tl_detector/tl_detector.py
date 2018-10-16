@@ -14,7 +14,8 @@ import cv2
 import yaml
 
 STATE_COUNT_THRESHOLD = 3
-
+LOOKAHEAD_WPS = 20
+IMG_COUNTER = 2
 class TLDetector(object):
     def __init__(self):
         rospy.init_node('tl_detector')
@@ -23,7 +24,7 @@ class TLDetector(object):
         self.waypoints = None
         self.camera_image = None
         self.lights = []
-        
+        self.img_counter = 0
         self.waypoints_2d = None
         self.waypoint_tree = None
 
@@ -191,7 +192,8 @@ class TLDetector(object):
                                                    self.pose.pose.position.y)
 
         #TODO find the closest visible traffic light (if one exists)
-        diff = len(self.waypoints.waypoints)
+        #diff = len(self.waypoints.waypoints)
+        diff = LOOKAHEAD_WPS + 100
         for i, light in enumerate(self.lights):
             # Get stop line waypoint index
             line = stop_line_positions[i]
@@ -203,9 +205,13 @@ class TLDetector(object):
                 closest_light = light
                 line_wp_idx = temp_wp_idx
         if closest_light:
-            state = self.get_light_state(closest_light)
-            return line_wp_idx, state
-      
+            if self.img_counter == IMG_COUNTER:
+                 state = self.get_light_state(closest_light)
+                 self.img_counter = 0
+                 return line_wp_idx, state
+            else:
+                self.img_counter = self.img_counter + 1
+                return line_wp_idx,self.state      
         return -1, TrafficLight.UNKNOWN
 
 if __name__ == '__main__':
