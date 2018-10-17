@@ -18,8 +18,8 @@ class TLClassifier(object):
         self.predict = None
         self.clabels = [4, 2, 0, 1, 4, 4]
         self.readsize = 1024
-        detect_model = 'frozen_inference_graph_TF13_2000.pb'
-
+        detect_model = 'frozen_inference_graph_TF13_sim_2000.pb'
+        #detect_model = 'frozen_inference_graph_TF13_real_5000.pb'
         # setup tensorflow graph
         self.detection_graph = tf.Graph()
         # configuration for possible GPU
