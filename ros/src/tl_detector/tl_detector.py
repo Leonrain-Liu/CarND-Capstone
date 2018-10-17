@@ -14,8 +14,8 @@ import cv2
 import yaml
 
 STATE_COUNT_THRESHOLD = 3
-LOOKAHEAD_WPS = 20
-IMG_COUNTER = 2
+LOOKAHEAD_WPS = 30
+IMG_COUNTER = 3
 class TLDetector(object):
     def __init__(self):
         rospy.init_node('tl_detector')
@@ -195,7 +195,7 @@ class TLDetector(object):
 
         #TODO find the closest visible traffic light (if one exists)
         #diff = len(self.waypoints.waypoints)
-        diff = LOOKAHEAD_WPS + 100
+        diff = LOOKAHEAD_WPS + 90
         for i, light in enumerate(self.lights):
             # Get stop line waypoint index
             line = stop_line_positions[i]
